@@ -1,4 +1,7 @@
 import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from keras import backend as K
 
 def merge_training_dataset(feature_set, label_set):
     merged = pd.merge(feature_set, label_set, on='id')
@@ -24,3 +27,11 @@ def preprocess_data(X : np.ndarray, scaler=None):
     else:
         X = scaler.fit_transform(X)      
     return X
+
+def import_predict_dataset(url_features):
+    feature_set = pd.read_csv(url_features)
+    feature_set.drop('Unnamed: 0', axis=1, inplace=True)
+    return feature_set
+
+def root_mean_squared_error(y_true, y_pred):
+    return K.sqrt(K.mean(K.square(y_pred - y_true))) 

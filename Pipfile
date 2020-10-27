@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+pylama = "*"
 
 [packages]
 ipykernel = "*"
@@ -13,6 +14,7 @@ tensorflow = "*"
 sklearn = "*"
 pandas = "*"
 seaborn = "*"
+pylama = "*"
 
 [requires]
 python_version = "3.8"
