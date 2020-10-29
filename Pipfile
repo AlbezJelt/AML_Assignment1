@@ -15,6 +15,9 @@ sklearn = "*"
 pandas = "*"
 seaborn = "*"
 pylama = "*"
+qhoptim = "*"
+keras-tuner = "*"
+joblib = "*"
 
 [requires]
 python_version = "3.8"

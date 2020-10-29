@@ -2,6 +2,10 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from keras import backend as K
+from keras.layers import Activation
+import tensorflow as tf
+from joblib import dump
+import os
 
 def merge_training_dataset(feature_set, label_set):
     merged = pd.merge(feature_set, label_set, on='id')
@@ -19,13 +23,20 @@ def prepare_data(train_set, test_set):
     Y_test = test_set.copy().pop("price").to_numpy(dtype=np.float32)
     return train_set.copy().to_numpy(dtype=np.float32), Y_train, test_set.copy().to_numpy(dtype=np.float32), Y_test
 
-def preprocess_data(X : np.ndarray, scaler=None):
-    if not scaler:
+def preprocess_data(X, scaler=None, save_scaler=False, scaler_name=None):
+    if scaler == None:
         scaler = StandardScaler()
-    if X.ndim == 1:
-        X = np.squeeze(scaler.fit_transform(X.reshape(-1, 1)))
-    else:
-        X = scaler.fit_transform(X)      
+        if X.ndim == 1:
+            X = np.squeeze(scaler.fit_transform(X.reshape(-1, 1)))
+        else:
+            X = scaler.fit_transform(X)  
+    else: 
+        if X.ndim == 1:
+            X = np.squeeze(scaler.transform(X.reshape(-1, 1)))
+        else:
+            X = scaler.transform(X)  
+    if save_scaler:
+        dump(scaler, f"{os.getcwd()}/models/{scaler_name}.joblib") 
     return X
 
 def import_predict_dataset(url_features):
@@ -34,4 +45,9 @@ def import_predict_dataset(url_features):
     return feature_set
 
 def root_mean_squared_error(y_true, y_pred):
-    return K.sqrt(K.mean(K.square(y_pred - y_true))) 
+    y_true = K.cast(y_true, 'float32')
+    y_pred = K.cast(y_pred, 'float32')
+    return K.sqrt(K.mean(K.square(y_pred - y_true)))
+
+def gelu(x):
+    return 0.5 * x * (1 + tf.tanh(tf.sqrt(2 / np.pi) * (x + 0.044715 * tf.pow(x, 3))))
