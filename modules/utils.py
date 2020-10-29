@@ -18,10 +18,9 @@ def import_training_dataset(url_features, url_labels):
     train_set.drop('id', axis=1, inplace=True)
     return train_set
 
-def prepare_data(train_set, test_set):
+def prepare_data(train_set):
     Y_train = train_set.copy().pop("price").to_numpy(dtype=np.float32)
-    Y_test = test_set.copy().pop("price").to_numpy(dtype=np.float32)
-    return train_set.copy().to_numpy(dtype=np.float32), Y_train, test_set.copy().to_numpy(dtype=np.float32), Y_test
+    return train_set.copy().to_numpy(dtype=np.float32), Y_train
 
 def preprocess_data(X, scaler=None, save_scaler=False, scaler_name=None):
     if scaler == None:
